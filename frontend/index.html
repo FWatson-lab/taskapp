@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tasks</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Tasks</h1>
+  <div class="controls">
+    <input id="api-key" placeholder="API key" />
+    <select id="filter">
+      <option value="">All</option>
+      <option value="open">Open</option>
+      <option value="in_progress">In progress</option>
+      <option value="done">Done</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <button id="refresh">Refresh</button>
+  </div>
+</header>
+
+<main>
+  <form id="new-task-form">
+    <input name="title" placeholder="Task title" required>
+    <input name="description" placeholder="Description (optional)">
+    <select name="priority">
+      <option value="low">Low</option>
+      <option value="medium" selected>Medium</option>
+      <option value="high">High</option>
+    </select>
+    <button type="submit">Add</button>
+  </form>
+
+  <ul id="task-list"></ul>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
