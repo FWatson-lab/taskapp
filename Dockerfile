@@ -17,5 +17,5 @@ RUN chmod +x scripts/init_db.sh && ./scripts/init_db.sh
 ENV TASKAPP_DB=/app/tasks.db
 ENV TASKAPP_API_KEY=change-me-in-production
 
-EXPOSE 8080
+EXPOSE 5000
 CMD ["python", "-m", "backend.app"]
