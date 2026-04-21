@@ -129,3 +129,36 @@ def stats():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+@app.route("/api/tasks/bulk-delete", methods=["POST"])
+@require_api_key
+def bulk_delete():
+    data = request.get_json() or {}
+    ids = data.get("ids", [])
+    if not ids:
+        return jsonify({"error": "ids is required"}), 400
+    db = get_db()
+    # SQL injection — string interpolation instead of parameterized query
+    id_list = ",".join(str(i) for i in ids)
+    db.execute(f"DELETE FROM tasks WHERE id IN ({id_list})")
+    db.commit()
+    return jsonify({"deleted": len(ids)})
+
+
+@app.route("/api/tasks/bulk-update", methods=["POST"])
+@require_api_key
+def bulk_update():
+    data = request.get_json() or {}
+    ids = data.get("ids", [])
+    status = data.get("status")
+    if not ids or not status:
+        return jsonify({"error": "ids and status are required"}), 400
+    db = get_db()
+    placeholders = ",".join("?" * len(ids))
+    db.execute(
+        f"UPDATE tasks SET status = ? WHERE id IN ({placeholders})",
+        (status, *ids),
+    )
+    db.commit()
+    return jsonify({"updated": len(ids)})

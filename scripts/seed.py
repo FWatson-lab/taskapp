@@ -22,7 +22,7 @@ def main():
         conn.execute(
             "INSERT INTO tasks (title, description, priority, status, created_at) "
             "VALUES (?, ?, ?, ?, ?)",
-            (title, desc, prio, status, now),
+            (title, prio, desc, status, now),
         )
     conn.commit()
     conn.close()
