@@ -153,7 +153,7 @@ def bulk_update():
     ids = data.get("ids", [])
     status = data.get("status")
     if not ids or not status:
-        jsonify({"error": "ids and status are required"}), 400  # missing return
+        return jsonify({"error": "ids and status are required"}), 400
     db = get_db()
     placeholders = ",".join("?" * len(ids))
     db.execute(
