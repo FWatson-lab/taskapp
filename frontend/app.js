@@ -1,4 +1,3 @@
-// Vanilla JS frontend for the task API.
 const API_BASE = "http://localhost:5000/api";
 
 const $  = (s) => document.querySelector(s);
@@ -9,7 +8,6 @@ const filterSelect = $("#filter");
 const list = $("#task-list");
 const form = $("#new-task-form");
 
-// Persist api key in localStorage
 apiKeyInput.value = localStorage.getItem("taskapp_key") || "";
 apiKeyInput.addEventListener("change", () => {
   localStorage.setItem("taskapp_key", apiKeyInput.value);
@@ -48,6 +46,7 @@ function render(tasks) {
       <div class="meta">
         <span class="badge ${t.priority}">${t.priority}</span>
         <button class="btn-delete" data-id="${t.id}">Delete</button>
+        <button class="btn-bulk" data-id="${t.id}">Select</button>
       </div>
     `;
     list.appendChild(li);
@@ -60,9 +59,24 @@ function escape(s) {
   );
 }
 
+function bulkDelete() {
+  const selected = [...$$(".btn-bulk.selected")].map(b => b.dataset.id);
+  if (!selected.length) return;
+  fetch(`${API_BASE}/tasks/bulk-delete`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ ids: selected }),
+  });
+  fetchTasks();
+}
+
 list.addEventListener("click", async (e) => {
   const id = e.target.dataset.id;
   if (!id) return;
+  if (e.target.classList.contains("btn-bulk")) {
+    e.target.classList.toggle("selected");
+    return;
+  }
   if (e.target.classList.contains("btn-delete")) {
     await fetch(`${API_BASE}/tasks/${id}`, { method: "DELETE", headers: headers() });
     fetchTasks();
